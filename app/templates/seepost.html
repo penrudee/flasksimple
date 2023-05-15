@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block head %}
+    <meta property="og:title" content="paper summary">
+    <meta property="og:url" content="{{url_for('seepost',id=p.id)}}">
+    
+    <meta property="og:description" content="Study pdf summary for healthcare professional">
+{% endblock head %}
+{% block content %}
+    {% if p %}
+        <h2>🗓️: {{p.timestamp.strftime("%d-%m-%Y") |safe }}</h2>
+        <p>{{ p.body|safe }}</p>
+
+
+    {% endif %}
+
+
+
+{% endblock %}
