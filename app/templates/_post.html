@@ -6,6 +6,9 @@
         }
     </style>
     <tr valign="top">
+       
+        
+       
         <td><img src="{{ post.author.avatar(36) }}"></td>
         <td><a href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a> says:<br>
             <a href="{{url_for('seepost',id=post.id)}}">
@@ -19,7 +22,14 @@
                     <div class="comment">
                         💬{{post.comments.count()}}
                     </div>
+                    
                     {% endif %}
+                    <div class="edit">
+                        {% if post.user_id|int == current_user.id|int %}
+      
+                            <a href="{{url_for('edit',id=post.id)}}">✏️Edit</a>
+                        {% endif %}
+                    </div>
                 </p>
             </a>
             {% for tag in post.tags %}

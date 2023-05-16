@@ -8,17 +8,16 @@
 {{ pagedown.html_head() }}
 {% endblock head %}
 {% block content %}
-{% if p.user_id|int == current_user.id|int %}
 
-<p><a href="{{url_for('edit',id=p.id)}}">Edit</a></p>
-{% endif %}
 {% if p %}
-<h2>🗓️: {{p.timestamp.strftime("%d-%m-%Y") |safe }}</h2>
-{% if p.body_html %}
-{{ p.body_html | safe }}
-{% else %}
-{{ p.body | safe  }}
-{% endif %}
+<div class="post-detail">
+    <h2>🗓️: {{p.timestamp.strftime("%d-%m-%Y") |safe }}</h2>
+    {% if p.body_html %}
+    {{ p.body_html | safe }}
+    {% else %}
+    {{ p.body | safe }}
+    {% endif %}
+</div>
 
 
 

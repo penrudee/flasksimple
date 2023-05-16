@@ -49,7 +49,7 @@ label{
 div{
     font-family: "pimdeed";
 }
-img{
+div.post-detail img{
     width: 45%;
 }
 code{
