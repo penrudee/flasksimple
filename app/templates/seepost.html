@@ -6,10 +6,15 @@
     <meta property="og:description" content="Study pdf summary for healthcare professional">
 {% endblock head %}
 {% block content %}
+{% if p.user_id|int == current_user.id|int %}
+        
+<p><a href="{{url_for('edit',id=p.id)}}">Edit</a></p>
+{% endif %}
     {% if p %}
         <h2>🗓️: {{p.timestamp.strftime("%d-%m-%Y") |safe }}</h2>
         <p>{{ p.body|safe }}</p>
-
+        
+       
 
     {% endif %}
     <div class="comment-form">

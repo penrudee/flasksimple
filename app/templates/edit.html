@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="{{url_for('edit',id=ep.id)}}" method="post">
+    {{form.hidden_tag()}}
+    <p>
+        {{form.post(class='form-control',cols=50, rows=10)}}
+    </p>
+    <p style="margin: 10px ;">
+        {{form.submit(class='btn btn-primary')}}
+    </p>
+</form>
+{% endblock %}

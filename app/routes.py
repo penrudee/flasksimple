@@ -214,3 +214,23 @@ def tag(name):
         tags=tags.items,
         next_url=next_url,
         prev_url=prev_url)
+@app.route('/edit/<int:id>',methods=['GET','POST'])
+@login_required
+def edit(id):
+    form=PostForm()
+    ep = Post.query.filter_by(id=id).first()
+
+    if request.method =='POST':
+        
+        ep.body = markdown.markdown(form.post.data)
+        ep.timestamp = datetime.now() 
+        db.session.add(ep)
+        db.session.commit()
+        flash("Edit success","success")
+        return redirect(url_for('seepost',id=id))
+    else:
+        form.post.data = ep.body
+    return render_template('edit.html',
+                           title='Edit',
+                           form=form,
+                           ep=ep)
