@@ -23,7 +23,7 @@ def favicon():
 @login_required
 def index():
     form = PostForm()
-    if form.validate_on_submit():
+    if request.method=='POST':
         post = Post(body=markdown.markdown(form.post.data), author=current_user)
         for tag in form.tags.data:
             post.tags.append(Tag(name=tag))

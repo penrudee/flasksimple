@@ -3,7 +3,8 @@ from hashlib import md5
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import bleach
+from markdown import markdown
 tags_table = db.Table(
     'tags_association',
     db.Column('post_id', db.ForeignKey('post.id'), primary_key=True),
@@ -76,11 +77,19 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comments = db.relationship('Comment', backref='article', lazy='dynamic')
-
+    body_html = db.Column(db.Text)
     tags = db.relationship(
         'Tag',
         secondary=tags_table,
         backref=db.backref('posts', lazy='dynamic'))
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+        'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+        markdown(value, output_format='html'),
+        tags=allowed_tags, strip=True))
     def __repr__(self):
         return '<Post {}>'.format(self.body)
     
@@ -90,7 +99,16 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     post_id =db.Column(db.Integer,db.ForeignKey('post.id'))
-
+    body_html = db.Column(db.Text)
+    
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+        'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+        markdown(value, output_format='html'),
+        tags=allowed_tags, strip=True))
     def __repr__(self):
         return '<Comment {}>'.format(self.body)
     
@@ -102,3 +120,5 @@ class Tag(db.Model):
 
     def __repr__(self):
         return f'Tag: {self.name}'
+db.event.listen(Post.body, 'set', Post.on_changed_body)   
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)

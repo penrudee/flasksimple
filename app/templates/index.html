@@ -1,5 +1,8 @@
 {% extends "base.html" %}
-
+{% block head %}
+{{ super() }}
+{{ pagedown.html_head() }}
+{% endblock %}
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
     {% if form %}

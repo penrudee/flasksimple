@@ -1,7 +1,7 @@
 <table>
     <style>
-        span div.comment{
-            
+        span div.comment {
+
             font-size: 16px;
         }
     </style>
@@ -9,7 +9,11 @@
         <td><img src="{{ post.author.avatar(36) }}"></td>
         <td><a href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a> says:<br>
             <a href="{{url_for('seepost',id=post.id)}}">
-                <span> {{ post.body|truncate(100)|safe }}</span>
+                {% if post.body_html %}
+                {{ post.body_html | safe |truncate(100) }}
+                {% else %}
+                {{ post.body | safe | truncate(100) }}
+                {% endif %}
                 <p>
                     {% if post.comments.count() > 0 %}
                     <div class="comment">

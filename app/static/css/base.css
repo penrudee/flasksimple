@@ -52,3 +52,11 @@ div{
 img{
     width: 45%;
 }
+code{
+    background-color: black;
+    color: white;
+    font-family: "pimdeed";
+    padding: 5px;
+    border-radius: 10px;
+    font-size: 15px;
+}

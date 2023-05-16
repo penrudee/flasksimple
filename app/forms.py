@@ -4,8 +4,8 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, \
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, \
     Length
 from app.models import User
-
-
+from flask_pagedown.fields import PageDownField
+from flask_wtf.recaptcha import RecaptchaField
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -53,7 +53,7 @@ class EmptyForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    post = TextAreaField('Say something[This text field can use Markdown.]', validators=[DataRequired()])
+    post = PageDownField('Say something[This text field can use Markdown.]', validators=[DataRequired()])
     tags = SelectMultipleField(
         'Tag Name',
         validators=[DataRequired()],
@@ -63,4 +63,5 @@ class PostForm(FlaskForm):
             ('Fungal infections', 'Fungal infections'),
             ('Antibiotics','Antibiotics'),
         ])
+    recaptcha = RecaptchaField('Captcha')
     submit = SubmitField('Submit')

@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% block head %}
+{{ super() }}
+{{ pagedown.html_head() }}
+{% endblock %}
 {% block content %}
 <form action="{{url_for('edit',id=ep.id)}}" method="post">
     {{form.hidden_tag()}}

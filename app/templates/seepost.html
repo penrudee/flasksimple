@@ -1,50 +1,56 @@
 {% extends 'base.html' %}
 {% block head %}
-    <meta property="og:title" content="paper summary">
-    <meta property="og:url" content="{{url_for('seepost',id=p.id)}}">
-    
-    <meta property="og:description" content="Study pdf summary for healthcare professional">
+<meta property="og:title" content="paper summary">
+<meta property="og:url" content="{{url_for('seepost',id=p.id)}}">
+
+<meta property="og:description" content="Study pdf summary for healthcare professional">
+{{ super() }}
+{{ pagedown.html_head() }}
 {% endblock head %}
 {% block content %}
 {% if p.user_id|int == current_user.id|int %}
-        
+
 <p><a href="{{url_for('edit',id=p.id)}}">Edit</a></p>
 {% endif %}
-    {% if p %}
-        <h2>🗓️: {{p.timestamp.strftime("%d-%m-%Y") |safe }}</h2>
-        <p>{{ p.body|safe }}</p>
-        
-       
+{% if p %}
+<h2>🗓️: {{p.timestamp.strftime("%d-%m-%Y") |safe }}</h2>
+{% if p.body_html %}
+{{ p.body_html | safe |truncate(100) }}
+{% else %}
+{{ p.body | safe | truncate(100) }}
+{% endif %}
 
-    {% endif %}
-    <div class="comment-form">
-        <form action="{{url_for('comment',id=p.id)}}" method="POST">
-            {{form.hidden_tag()}}
-            <div>
-                {{form.post.label(class="form-control-label")}}
-                {{form.post(class="form-control")}}
-            </div>
-            <div style="margin: 10px;">
-                {{form.submit(class="btn btn-primary")}}
-            </div>
-        </form>
-    </div>
-    {%if comments %}
-    {% for comment in comments %}
-        <div class="comment-list">
-            <table>
-                <tr valign="top">
-                    <td><img src="{{ comment.author.avatar(36) }}"></td>
-                    <td>{{ comment.author.username }}says:<br>
-                        <a href="{{url_for('seepost',id=p.id)}}">
-                            {{ comment.body|safe }}
-                        </a>
-                    </td>
-                </tr>
-            </table>>
+
+
+{% endif %}
+<div class="comment-form">
+    <form action="{{url_for('comment',id=p.id)}}" method="POST">
+        {{form.hidden_tag()}}
+        <div>
+            {{form.post.label(class="form-control-label")}}
+            {{form.post(class="form-control")}}
         </div>
+        <div style="margin: 10px;">
+            {{form.submit(class="btn btn-primary")}}
+        </div>
+    </form>
+</div>
+{%if comments %}
+{% for comment in comments %}
+<div class="comment-list">
+    <table>
+        <tr valign="top">
+            <td><img src="{{ comment.author.avatar(36) }}"></td>
+            <td>{{ comment.author.username }}says:<br>
+                <a href="{{url_for('seepost',id=p.id)}}">
+                    {{ comment.body|safe }}
+                </a>
+            </td>
+        </tr>
+    </table>>
+</div>
 
-    {% endfor %}
-    {% endif %}
+{% endfor %}
+{% endif %}
 
 {% endblock %}
