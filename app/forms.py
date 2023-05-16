@@ -60,6 +60,7 @@ class PostForm(FlaskForm):
         choices=[
             ('Migraine', 'Migraine'),
             ('Weight loss', 'Weight loss'),
+            (' Menopausal Disorders',' Menopausal Disorders'),
             ('Fungal infections', 'Fungal infections'),
             ('Antibiotics','Antibiotics'),
             ('etc','etc')
