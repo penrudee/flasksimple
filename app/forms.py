@@ -62,6 +62,7 @@ class PostForm(FlaskForm):
             ('Weight loss', 'Weight loss'),
             ('Fungal infections', 'Fungal infections'),
             ('Antibiotics','Antibiotics'),
+            ('etc','etc')
         ])
     recaptcha = RecaptchaField('Captcha')
     submit = SubmitField('Submit')
