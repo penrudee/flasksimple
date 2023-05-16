@@ -5,7 +5,7 @@ from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, \
     EmptyForm, PostForm
-from app.models import User, Post
+from app.models import User, Post, Comment, Tag
 import markdown
 import os 
 @app.before_request
@@ -25,6 +25,8 @@ def index():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(body=markdown.markdown(form.post.data), author=current_user)
+        for tag in form.tags.data:
+            post.tags.append(Tag(name=tag))
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live!')
@@ -168,7 +170,47 @@ def unfollow(username):
     
 @app.route("/seepost/<int:id>")
 def seepost(id):
+    form = PostForm()
     p = Post.query.filter_by(id=id).first()
+    comments = Comment.query.filter_by(post_id=p.id).order_by(Comment.id.desc())
     return render_template("seepost.html",
                            title="Detail",
-                           p=p)
+                           p=p,
+                           comments=comments,
+                           form = form,)
+
+@app.route("/comment/<int:id>",methods=['POST'])
+@login_required
+def comment(id):
+    form = PostForm()
+    if request.method=='POST':
+        c = Comment()
+        c.body = markdown.markdown(form.post.data) 
+        c.timestamp = datetime.now() 
+        c.user_id = current_user.id 
+        c.post_id = id 
+        print(f"c {c}")
+        db.session.add(c)
+        db.session.commit() 
+        flash("Comment done","success")
+    return redirect(url_for('seepost',id=id))
+
+@app.route('/tag: <name>')
+def tag(name):
+    page = request.args.get('page', 1, type=int)
+    tags = Tag.query.filter_by(name=name).order_by(
+        Tag.timestamp.desc()).paginate(
+            page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
+
+    # Pagination
+    next_url = url_for('tag', name=name, page=tags.next_num) \
+        if tags.has_next else None
+    prev_url = url_for('tag', name=name, page=tags.prev_num) \
+        if tags.has_prev else None
+
+    return render_template(
+        'tags.html',
+        title=f'Posts Related To {name}',
+        tags=tags.items,
+        next_url=next_url,
+        prev_url=prev_url)

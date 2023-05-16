@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, \
-    TextAreaField
+    TextAreaField, SelectMultipleField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, \
     Length
 from app.models import User
@@ -53,5 +53,14 @@ class EmptyForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    post = TextAreaField('Say something', validators=[DataRequired()])
+    post = TextAreaField('Say something[This text field can use Markdown.]', validators=[DataRequired()])
+    tags = SelectMultipleField(
+        'Tag Name',
+        validators=[DataRequired()],
+        choices=[
+            ('Migraine', 'Migraine'),
+            ('Weight loss', 'Weight loss'),
+            ('Fungal infections', 'Fungal infections'),
+            ('Antibiotics','Antibiotics'),
+        ])
     submit = SubmitField('Submit')

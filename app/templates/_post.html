@@ -1,10 +1,26 @@
 <table>
+    <style>
+        span div.comment{
+            
+            font-size: 16px;
+        }
+    </style>
     <tr valign="top">
         <td><img src="{{ post.author.avatar(36) }}"></td>
         <td><a href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a> says:<br>
             <a href="{{url_for('seepost',id=post.id)}}">
-                {{ post.body|truncate(100)|safe }}
+                <span> {{ post.body|truncate(100)|safe }}</span>
+                <p>
+                    {% if post.comments.count() > 0 %}
+                    <div class="comment">
+                        💬{{post.comments.count()}}
+                    </div>
+                    {% endif %}
+                </p>
             </a>
+            {% for tag in post.tags %}
+            <a href="{{ url_for('tag', name=tag.name) }}" target="_blank">Tags:&nbsp;{{ tag.name }}</a> |
+            {% endfor %}
         </td>
     </tr>
 </table>>

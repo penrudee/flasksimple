@@ -20,6 +20,9 @@ h1 {
     color: black;
     font-size: 24px;
 }
+h2,h3,h4{
+    font-family: "pimdeed";
+}
 
 p {
     font-family: "pimdeed";
@@ -36,4 +39,13 @@ td a{
     text-decoration: none;
     cursor: pointer;
     color: black;
+}
+li{
+    font-family: "pimdeed";
+}
+label{
+    font-family: "pimdeed";
+}
+div{
+    font-family: "pimdeed";
 }

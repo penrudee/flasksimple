@@ -4,6 +4,11 @@ from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+tags_table = db.Table(
+    'tags_association',
+    db.Column('post_id', db.ForeignKey('post.id'), primary_key=True),
+    db.Column('tag_id', db.ForeignKey('tag.id'), primary_key=True),
+)
 
 followers = db.Table(
     'followers',
@@ -25,7 +30,7 @@ class User(UserMixin, db.Model):
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
-
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -70,6 +75,30 @@ class Post(db.Model):
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comments = db.relationship('Comment', backref='article', lazy='dynamic')
 
+    tags = db.relationship(
+        'Tag',
+        secondary=tags_table,
+        backref=db.backref('posts', lazy='dynamic'))
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+    
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_id =db.Column(db.Integer,db.ForeignKey('post.id'))
+
+    def __repr__(self):
+        return '<Comment {}>'.format(self.body)
+    
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'Tag: {self.name}'

@@ -12,7 +12,34 @@
 
 
     {% endif %}
+    <div class="comment-form">
+        <form action="{{url_for('comment',id=p.id)}}" method="POST">
+            {{form.hidden_tag()}}
+            <div>
+                {{form.post.label(class="form-control-label")}}
+                {{form.post(class="form-control")}}
+            </div>
+            <div style="margin: 10px;">
+                {{form.submit(class="btn btn-primary")}}
+            </div>
+        </form>
+    </div>
+    {%if comments %}
+    {% for comment in comments %}
+        <div class="comment-list">
+            <table>
+                <tr valign="top">
+                    <td><img src="{{ comment.author.avatar(36) }}"></td>
+                    <td>{{ comment.author.username }}says:<br>
+                        <a href="{{url_for('seepost',id=p.id)}}">
+                            {{ comment.body|safe }}
+                        </a>
+                    </td>
+                </tr>
+            </table>>
+        </div>
 
-
+    {% endfor %}
+    {% endif %}
 
 {% endblock %}

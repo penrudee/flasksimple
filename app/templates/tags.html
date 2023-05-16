@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for tag in tags %}
+{% for post in tag.posts %}
+  <table class="table table-hover">
+      <tr>
+        <td width="70px">
+          <img src="{{ post.author.avatar(36) }}" alt="{{ post.author.username }}">
+        </td>
+        <td>                
+          
+          <strong>{{ post.author.username }}</strong> said {{ post.timestamp.strftime("%d-%m-%Y")}}: <br>
+          {{ post.body|safe }} <br>
+        </td>
+      </tr>
+  </table>
+{% endfor %}
+{% endfor %}
+{% endblock %}
