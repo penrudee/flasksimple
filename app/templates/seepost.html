@@ -15,9 +15,9 @@
 {% if p %}
 <h2>🗓️: {{p.timestamp.strftime("%d-%m-%Y") |safe }}</h2>
 {% if p.body_html %}
-{{ p.body_html | safe |truncate(100) }}
+{{ p.body_html | safe }}
 {% else %}
-{{ p.body | safe | truncate(100) }}
+{{ p.body | safe  }}
 {% endif %}
 
 
