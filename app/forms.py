@@ -64,6 +64,7 @@ class PostForm(FlaskForm):
             ('Fungal infections', 'Fungal infections'),
             ('Antibiotics','Antibiotics'),
             ('Drugs and Lactation','Drugs and Lactation'),
+            ('Cancer','Cancer'),
             ('etc','etc')
         ])
     recaptcha = RecaptchaField('Captcha')
