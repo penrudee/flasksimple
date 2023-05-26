@@ -59,6 +59,7 @@ class PostForm(FlaskForm):
         validators=[DataRequired()],
         choices=[
             ('Migraine', 'Migraine'),
+            ('Allergy', 'Allergy'),
             ('Weight loss', 'Weight loss'),
             ('Menopausal Disorders','Menopausal Disorders'),
             ('Fungal infections', 'Fungal infections'),
